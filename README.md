@@ -2,28 +2,26 @@
 
 ## Aim
 
-This projects looks at NGS data from S. pombe to determine if there are differences in the frequency of DNA mismatches between samples in the treatments versus controls. We will also identify where mismatches have occurred in the genome.
+Analysis of NGS sequencing data from S. pombe to determine if there are differences in the frequency of DNA mismatches between the control and treatment samples. The code will identify any mismatches in the reference sequence.
 
-## How to use
+## Usage
 
-Use the assessment notebook on Google Colab. Upload the given reference sequence and reads.csv file. Use run all cells in order. There is no additional software needed.
+Open the assessment notebook on Google Colab, upload the reference sequence and reads.csv then run all cells in order. No extra software is needed for this.
 
 ## Input & Output
 
-The program takes an input of a reference sequence of DNA and sequenced reads. The program checks that the length of reads and correct nucleotides are present. It also identifies substitutions and mismatch locations.
+The program takes a reference DNA sequence and sequencing reads labelled by sample and experimental group. It checks read lengths and nucleotide validity, identifies substitutions, and records mismatch positions.
 
-The output includes valid and invalid read counts, mismatch percentages, substitution frequencies, and frequently mismatched positions for each sample. Welch's t-tests compare mismatch frequencies between treatment and control groups at the three positions with the highest combined mismatch counts.
+Results include counts of valid and invalid reads, mismatch percentages, substitution frequencies, and commonly mismatched positions for each sample. Welch’s t-tests compare mismatch frequencies between groups at the three positions with the highest combined mismatch counts.
 
 ## Code Design
 
-The code has been broken down into 5 parts so that each of these functions can be tested individually. This avoids any duplication of calculations.
+Validation, mutation detection, read annotation, sample summarisation, and statistical comparison are separated into individual functions. This allows each stage to be tested independently and avoids repeated calculations. Combining everything into one function would make debugging more difficult.
 
-Dictionaries have been used to store the number of substitutions and positions. This makes it easy to get the information using the mutation type and reference position. This was chosen instead of going through a list.
+Dictionaries are used to store the number of substitutions and positions. These allow us to directly look up each type of mutation and each position. This was chosen instead of searching through lists of mutation events which would have caused more comparisons.
 
-Invalid reads are still included in the quality summaries of the samples but are ignored when calculating the mismatch. This ensures that the percentage is not misleading. If there are no valid reads in the sample then a None value will be given for the mismatch.
-
-Ties for the position with the most mismatches are resolved by taking the smallest reference position. This helps to ensure the values are ordered consistently.
+Unreadable values are included in the summary but not counted in the mismatches. It is important that these are not included in the denominator as this would cause the percentage of mismatches to be lower than expected. If there are no valid values in the sample then the mismatch percentage will be set to None.
 
 ## Testing
 
-The program was tested using small data sets. Assert statements were used to ensure that the programs works correctly. This included testing with valid reads that had known mismatches, incorrect length sequences, invalid nucleotides and empty inputs. The summary functions will return empty collections and so this was tested with an empty input. A sample with no valid reads was tested to ensure that the mismatch percentage can handle undefined values safely.
+The program was tested with small data sets and assert statements. We tested to see if a mismatch was added to position 4 when comparing the reads ACGA and ACGT. We also tested to see if any invalid nucleotide characters were found when comparing ACNT and ACGT. Lastly we tested to see if a sample with no valid values would have a mismatch percentage of None.
