@@ -1,27 +1,29 @@
-# Project 1 - NGS Sequence Mismatch Analysis
+# Project 1: Identifying Mutations in NGS Data
 
-## Aim
+## Purpose
 
-Analysis of NGS sequencing data from S. pombe to determine if there are differences in the frequency of DNA mismatches between the control and treatment samples. The code will identify any mismatches in the reference sequence.
+The aim of this project is to use next generation sequencing of control and treated samples of Schizosaccharomyces pombe to identify any mismatches with the reference sequence. Mutation profiles can be studied and compared to see if there are differences in the number of mismatches between the two experimental groups.
 
-## Usage
+## How to Run
 
-Open the assessment notebook on Google Colab, upload the reference sequence and reads.csv then run all cells in order. No extra software is needed for this.
+Open Copy_of_C7147_Project_1_assessment.ipynb in Google Colab. Ensure that reads.csv is available at the file path used in the notebook. Run all cells in order to complete the final analysis.
 
-## Input & Output
+## Inputs and Outputs
 
-The program takes a reference DNA sequence and sequencing reads labelled by sample and experimental group. It checks read lengths and nucleotide validity, identifies substitutions, and records mismatch positions.
+The reads.csv file contains the read ID, sample name, experimental group and DNA sequence for each read. These sequences are compared against a reference sequence to identify any mismatches.
 
-Results include counts of valid and invalid reads, mismatch percentages, substitution frequencies, and commonly mismatched positions for each sample. Welch’s t-tests compare mismatch frequencies between groups at the three positions with the highest combined mismatch counts.
+The program provides read validation results, detected mutations, sample-level summaries, substitution counts and the three most frequently observed mismatch positions. It also compares mismatch frequencies between the control and treatment groups, reporting the mean percentages, differences between groups, Welch’s t-statistics and two-sided p-values.
 
 ## Code Design
 
-Validation, mutation detection, read annotation, sample summarisation, and statistical comparison are separated into individual functions. This allows each stage to be tested independently and avoids repeated calculations. Combining everything into one function would make debugging more difficult.
+Each element of validation, mutation detection, read analysis, sample summary and statistical analysis has been split into separate functions. This makes it easier to test and debug each part. Alternatively, all of these could be done in one function; however, this would make it harder to find any errors.
 
-Dictionaries are used to store the number of substitutions and positions. These allow us to directly look up each type of mutation and each position. This was chosen instead of searching through lists of mutation events which would have caused more comparisons.
+Dictionaries have been used to keep track of the number of substitutions and mismatches. This allows the counts to be updated directly using the type of mutation and reference position. This is better than continually searching through lists, which would require more comparisons.
 
-Unreadable values are included in the summary but not counted in the mismatches. It is important that these are not included in the denominator as this would cause the percentage of mismatches to be lower than expected. If there are no valid values in the sample then the mismatch percentage will be set to None.
+Invalid reads have been included in the sample quality summary but not taken into account when calculating the mismatch rates so as not to reduce the frequency of mismatches. If there are no valid reads in a sample then the percentage of mismatches will be set to None.
 
 ## Testing
 
-The program was tested with small data sets and assert statements. We tested to see if a mismatch was added to position 4 when comparing the reads ACGA and ACGT. We also tested to see if any invalid nucleotide characters were found when comparing ACNT and ACGT. Lastly we tested to see if a sample with no valid values would have a mismatch percentage of None.
+I can test the functions using small test datasets and assert statements. Comparing ACGA and ACGT shows that it correctly identifies that the fourth position has a mismatch. Testing with ACNT shows that it correctly logs invalid characters. Finally, testing with a dataset containing only ACNT shows that it correctly sets the percentage mismatch to None if there are no valid reads.
+
+I also tested Step 5 with a control sample containing no valid reads. The test confirmed that the sample was excluded, the control mean and group difference were None, and unavailable statistical results were reported as N/A without an error.
